@@ -1,38 +1,75 @@
-.App {
-  text-align: center;
+:root {}
+
+html {
+  background: darkslateblue;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.card {
+  margin: 15px;
+  display: inline-block;
+  position: relative;
+  width: 150px;
+  height: 209px;
+  background: transparent;
+  transition: ease transform 0.2s;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.card img {
+  position: absolute;
+  max-width: 100%;
+  box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.25);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.cardBtnContainer {
+  position: absolute;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  right: 0;
+  top: 10%;
 }
 
-.App-link {
-  color: #61dafb;
+.card button {
+  font-size: 12pt;
+  background: rgba(255, 255, 255, 0.7);
+  border: rgba(0, 0, 0, 0.5) solid 1px;
+  outline: 0;
+  border-radius: 0.3em;
+  margin: 5px;
+  z-index: 9999;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.card.expanded {
+  transition: transform ease 0.2s;
+  -webkit-transform: scale(2);
+  -moz-transform: scale(2);
+  -ms-transform: scale(2);
+  -o-transform: scale(2);
+  transform: scale(2);
+
+  transform-origin: top left;
+  z-index: 999;
+}
+
+.card.expanded.tapped {
+  transition: transform ease 0.2s;
+  -webkit-transform: scale(2) rotate(0deg);
+  -moz-transform: scale(2) rotate(0deg);
+  -ms-transform: scale(2) rotate(0deg);
+  -o-transform: scale(2) rotate(0deg);
+  transform: scale(2) rotate(0deg);
+  transform-origin: top left;
+}
+
+.card.tapped {
+  transition: transform ease 0.2s;
+  -webkit-transform: rotate(90deg);
+  /* Safari and Chrome */
+  -moz-transform: rotate(90deg);
+  /* Firefox */
+  -ms-transform: rotate(90deg);
+  /* IE 9 */
+  -o-transform: rotate(90deg);
+  /* Opera */
+  transform: rotate(90deg);
+  transform-origin: center;
 }
