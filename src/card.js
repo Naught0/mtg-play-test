@@ -4,17 +4,23 @@ import React from 'react';
 class Card extends React.Component {
     constructor(props) {
         super(props);
-        this.cardData = props.cardData;
-        this.state = { 
-            isFaceDown: props.isFaceDown ? props.isFaceDown : false, 
-            isMagnified: false, 
-            cardLocation: 'hand', 
-            isTapped: false, canTap: props.canTap ? props.canTap : true }
+        this.cardName = props.cardName;
+
+        this.state = {
+            isFaceDown: props.isFaceDown ? props.isFaceDown : false,
+            isMagnified: false,
+            cardLocation: 'hand',
+            isTapped: false, canTap: props.canTap ? props.canTap : true,
+            cardData: null
+        }
 
         this.toggleMagnify = this.toggleMagnify.bind(this);
         this.toggleTap = this.toggleTap.bind(this);
         this.onDrag = this.onDrag.bind(this);
+    }
 
+    componentDidMount() {
+        fetch(`https://api.scryfall.com/cards/search?q=${encodeURIComponent(this.cardName)}`).then(resp => resp.json()).then((data) => this.setState({ cardData: data }));
     }
 
     onMouseUp() {
@@ -101,7 +107,7 @@ class Card extends React.Component {
     render() {
         return (
             <div className={this.getClass()}>
-                <img src={this.props.imageURL} alt="" />
+                <img src={this.state.cardData ? this.state.cardData.data[0].image_uris.png : "https://images-na.ssl-images-amazon.com/images/I/61AGZ37D7eL._AC_SL1039_.jpg"} alt="" />
                 {this.displayButtons()}
             </div>
         )
