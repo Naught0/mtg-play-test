@@ -107,28 +107,9 @@ class Card extends React.Component {
     render() {
         return (
             <div className={this.getClass()}>
-                <img src={this.state.cardData ? this.state.cardData.data[0].image_uris.png : "https://images-na.ssl-images-amazon.com/images/I/61AGZ37D7eL._AC_SL1039_.jpg"} alt="" />
+                <img src={this.state.cardData ? this.state.cardData.data[0].image_uris.png : "https://c1.scryfall.com/file/scryfall-card-backs/large/59/597b79b3-7d77-4261-871a-60dd17403388.jpg?1562196890"} alt="" />
                 {this.displayButtons()}
             </div>
-        )
-    }
-}
-
-class Deck extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    onClick() {
-        // pop first item
-        // place in hand
-    }
-
-    render() {
-        return (
-            // Display face-down card
-            // 3 Buttons Draw, Shuffle, Search off to the right (are you sure confirm() dialog for shuffle/search)
-            null
         )
     }
 }
