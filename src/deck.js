@@ -6,7 +6,7 @@ class Deck extends React.Component {
         super(props);
         this.state = {
             deckListRaw: props.deckList,
-            deck: []
+            cardList: []
         }
     }
 
@@ -15,7 +15,7 @@ class Deck extends React.Component {
         // for (let i of this.state.deckListRaw.split('\\n')) {
         //     let numToAdd = parseInt(i[0]);
         // }
-        this.getDeckListData();
+        // this.getDeckListData();
     }
 
     deckListRawToJson() {
@@ -48,7 +48,7 @@ class Deck extends React.Component {
             .then(resp => resp.json())
             // .then(data => console.log(data.data))
             .then(data => this.setState({
-                deck: this.jsonToCardArr(data)
+                cardList: this.jsonToCardArr(data)
             }))
     }
 
@@ -56,10 +56,43 @@ class Deck extends React.Component {
 
     }
 
+    discardCard(num, where) {
+        // where = graveyard vs exile
+    }
+
+    shuffleDeck() {
+
+    }
+
+    revealCards(num) {
+
+    }
+
+    searchForCards() {
+
+    }
+
     render() {
         return (
-            <div className="card">
-                <img src="https://c1.scryfall.com/file/scryfall-card-backs/large/59/597b79b3-7d77-4261-871a-60dd17403388.jpg?1562196890" alt="" />
+            <div className="deck">
+                <img src="https://lh3.googleusercontent.com/proxy/YlGyxQ5BkCx0kVGyrAc5-rhDYJm3V52zBv6FrdKSeTm3W8pvhWaQR_ZTBNcPHsQMVCKFZbImnVMCHFMgXbg" alt="" />
+                <div className="cardBtnContainer">
+                    <button className="cardBtn" onClick={this.drawCard}>
+                        <i className="fas fa-hand-paper"></i>
+                    </button>
+                    <button className="cardBtn" onClick={this.discardCard}>
+                        <i className="fas fa-trash-alt"></i>
+                    </button>
+                    <button className="cardBtn" onClick={this.shuffleDeck}>
+                        <i className="fas fa-random"></i>
+                    </button>
+                    <button className="cardBtn">
+                        <i className="fas fa-eye"></i>
+                    </button>
+                    <button className="cardBtn">
+                        <i className="fas fa-search"></i>
+                    </button>
+                </div>
             </div>
         )
     }
