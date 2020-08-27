@@ -4,23 +4,18 @@ import React from 'react';
 class Card extends React.Component {
     constructor(props) {
         super(props);
-        this.cardName = props.cardName;
 
         this.state = {
             isFaceDown: props.isFaceDown ? props.isFaceDown : false,
             isMagnified: false,
             cardLocation: 'hand',
             isTapped: false, canTap: props.canTap ? props.canTap : true,
-            cardData: null
+            cardData: props.cardData
         }
 
         this.toggleMagnify = this.toggleMagnify.bind(this);
         this.toggleTap = this.toggleTap.bind(this);
         this.onDrag = this.onDrag.bind(this);
-    }
-
-    componentDidMount() {
-        fetch(`https://api.scryfall.com/cards/search?q=${encodeURIComponent(this.cardName)}`).then(resp => resp.json()).then((data) => this.setState({ cardData: data }));
     }
 
     onMouseUp() {
