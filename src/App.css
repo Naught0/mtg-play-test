@@ -1,7 +1,7 @@
 :root {}
 
 html {
-  background: #081017;
+  background: darkslateblue;
 }
 
 html *{
@@ -13,8 +13,10 @@ html *{
   height: 100vh;
   position: fixed;
   background: rgba(0,0,0,0.5);
+  display: none;
 }
 .search .show {
+  display: unset;
 }
 
 .graveyard {
@@ -23,7 +25,7 @@ html *{
   height: 209px;
   padding: 10px;
   bottom: 0; left: 0;
-  background: #b3ccd7;
+  background: grey;
 }
 .graveyard .card {
   position: absolute;
@@ -45,7 +47,7 @@ html *{
   height: 209px;
   padding: 1em;
   bottom: 0; right: 0;
-  background: #b3ccd7;
+  background: grey;
 }
 
 .deck img {
@@ -61,7 +63,7 @@ html *{
   max-width: 60vw;
   max-height: 25vh;
   padding: 1em;
-  background: #b3ccd7;
+  background: grey;
   bottom: 0; left: 0; right: 0;
   margin: auto;
 }
@@ -71,13 +73,13 @@ html *{
 }
 
 .card {
-  flex: content;
-  display: inline-flex;
+  flex-grow: 0;
+  width: 14%;
+  display: flex;
   position: relative;
   margin: 0.1em;
-  width: 14%;
   background: transparent;
-  transition: ease transform 0.2s;
+  /* transition: ease all 0.2s; */
 }
 
 .card img {
@@ -104,18 +106,23 @@ html *{
 }
 
 .card.expanded {
-  transition: transform ease 0.2s;
-  -webkit-transform: scale(2);
+  position: fixed;
+  width: 300px;
+  height: 418px;
+  left: 0;right:0;top:0;bottom:0;
+  margin:auto;
+  /* transition: ease all 0.2s; */
+  /* -webkit-transform: scale(2);
   -moz-transform: scale(2);
   -ms-transform: scale(2);
   -o-transform: scale(2);
   transform: scale(2);
-  transform-origin: bottom;
+  transform-origin: bottom; */
   z-index: 999;
 }
 .card.expanded button {
   opacity: 0.3;
-  transition: ease all 0.3s;
+  /* transition: ease all 0.3s; */
 }
 .card.expanded button:hover {
   opacity: 0.9;

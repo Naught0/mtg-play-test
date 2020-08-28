@@ -32,8 +32,13 @@ class Search extends React.Component {
   }
 
   getResults(e) {
+    let result = this.fuse.search(e.target.value);
+    console.log(this.state.pool);
+    console.log(this.state.results);
+    console.log(this.pool[0].name)
+    console.log(this.pool[0].name())
     this.setState({
-      results: this.fuse.search(e.target.value)
+      results: result
     });
   }
 

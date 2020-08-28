@@ -39,7 +39,7 @@ class Player extends Component {
     jsonToCardArr(data) {
         let arr = [];
         for (let card of data.data) {
-            arr.push(<Card cardData={card}></Card>)
+            arr.push(card)
         }
         return arr;
     }
@@ -63,6 +63,7 @@ class Player extends Component {
     }
 
     handleDraw() {
+        if (this.state.library.length === 0) { return; }
         this.setState((state, props) => ({
             hand: state.hand.concat([state.library[0]]),
             library: state.library.slice(1)
@@ -113,7 +114,8 @@ class Player extends Component {
         return (
             <React.Fragment>
                 <div className="hand">
-                    {this.state.hand}
+                    {this.state.hand.map((data) =>
+                        <Card cardData={data}></Card>)}
                 </div>
                 <Deck
                     handleDraw={this.handleDraw}
