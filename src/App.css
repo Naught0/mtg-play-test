@@ -1,21 +1,20 @@
 :root {}
 
 html {
-  background: darkslateblue;
+  background: #081017;
 }
 
 html *{
   border-radius: 0.3em;
 }
 
-.hand {
-  position: absolute;
-  width: 60vw;
-  height: 209px;
-  padding: 10px;
-  background: white;
-  bottom: 0; left: 0; right: 0;
-  margin: auto;
+.search {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  background: rgba(0,0,0,0.5);
+}
+.search .show {
 }
 
 .graveyard {
@@ -24,7 +23,16 @@ html *{
   height: 209px;
   padding: 10px;
   bottom: 0; left: 0;
-  background: white;
+  background: #b3ccd7;
+}
+.graveyard .card {
+  position: absolute;
+  width: 150px;
+  height: 209px;
+}
+
+.graveyard .card > .cardBtnContainer {
+  display: none;
 }
 
 .exile {
@@ -35,23 +43,44 @@ html *{
   position: absolute;
   width: 150px;
   height: 209px;
-  padding: 10px;
+  padding: 1em;
   bottom: 0; right: 0;
-  background: white;
+  background: #b3ccd7;
+}
+
+.deck img {
+  width: 150px;
+}
+
+.hand {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  position: absolute;
+  width: auto;
+  max-width: 60vw;
+  max-height: 25vh;
+  padding: 1em;
+  background: #b3ccd7;
+  bottom: 0; left: 0; right: 0;
+  margin: auto;
+}
+
+.hand .tap {
+  display: none;
 }
 
 .card {
-  margin: 15px;
-  display: inline-block;
+  flex: content;
+  display: inline-flex;
   position: relative;
-  width: 150px;
-  height: 209px;
+  margin: 0.1em;
+  width: 14%;
   background: transparent;
   transition: ease transform 0.2s;
 }
 
 .card img {
-  position: absolute;
   max-width: 100%;
   box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.25);
 }
@@ -60,18 +89,18 @@ html *{
   position: absolute;
   display: flex;
   flex-direction: column;
-  right: 0;
-  top: 10%;
+  right: 5%;
+  top: 10px;
 }
 
 .card button {
-  font-size: 12pt;
+  font-size: 11pt;
   background: rgba(255, 255, 255, 0.7);
   border: rgba(0, 0, 0, 0.5) solid 1px;
   outline: 0;
   border-radius: 0.3em;
   margin: 5px;
-  z-index: 9999;
+  z-index: 998;
 }
 
 .card.expanded {
@@ -81,9 +110,16 @@ html *{
   -ms-transform: scale(2);
   -o-transform: scale(2);
   transform: scale(2);
-
-  transform-origin: top left;
+  transform-origin: bottom;
   z-index: 999;
+}
+.card.expanded button {
+  opacity: 0.3;
+  transition: ease all 0.3s;
+}
+.card.expanded button:hover {
+  opacity: 0.9;
+  transition: ease all 0.3s;
 }
 
 .card.expanded.tapped {
@@ -93,7 +129,7 @@ html *{
   -ms-transform: scale(2) rotate(0deg);
   -o-transform: scale(2) rotate(0deg);
   transform: scale(2) rotate(0deg);
-  transform-origin: top left;
+  /* transform-origin: top left; */
 }
 
 .card.tapped {

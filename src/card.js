@@ -4,13 +4,13 @@ import React from 'react';
 class Card extends React.Component {
     constructor(props) {
         super(props);
-
+        this.name = props.cardData.name;
+        this.image = props.cardData.image_uris.png;
         this.state = {
             isFaceDown: props.isFaceDown ? props.isFaceDown : false,
             isMagnified: false,
             cardLocation: 'hand',
-            isTapped: false, canTap: props.canTap ? props.canTap : true,
-            cardData: props.cardData
+            isTapped: false,
         }
 
         this.toggleMagnify = this.toggleMagnify.bind(this);
@@ -28,11 +28,9 @@ class Card extends React.Component {
         if (this.state.isFaceDown) return;
 
         if (this.state.isMagnified) {
-            e.target.style.transformOrigin = "top left";
             this.setState({
                 isMagnified: false
             })
-            e.target.style.transformOrigin = "center";
         }
         else {
             this.setState({
@@ -67,16 +65,14 @@ class Card extends React.Component {
                 </button>
             )
         }
-        if (this.state.canTap) {
-            buttonArray.push(
-                <button className="cardBtn" onClick={this.toggleTap}>
-                    <i className={"fas fa-redo"}></i>
-                </button>
-            )
-        }
+        buttonArray.push(
+            <button className="cardBtn tap" onClick={this.toggleTap}>
+                <i className={"fas fa-redo"}></i>
+            </button>
+        )
 
         return (
-            <div className="cardBtnContainer">
+            <div className="cardBtnContainer" >
                 {buttonArray}
             </div>
         )
@@ -102,7 +98,7 @@ class Card extends React.Component {
     render() {
         return (
             <div className={this.getClass()}>
-                <img src={this.state.cardData ? this.state.cardData.data[0].image_uris.png : "https://c1.scryfall.com/file/scryfall-card-backs/large/59/597b79b3-7d77-4261-871a-60dd17403388.jpg?1562196890"} alt="" />
+                <img src={this.image} />
                 {this.displayButtons()}
             </div>
         )
