@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../node_modules/fuzzysearch/index';
 
 import Deck from './deck';
+import Hand from './hand';
 import Card from './card';
 import Graveyard from './graveyard';
 import fuzzysearch from '../node_modules/fuzzysearch/index';
@@ -114,6 +115,7 @@ class Player extends Component {
 
     handleGraveyardSearch() {
         if (this.state.graveyard.length === 0) { return; }
+
         this.setState({
             searchVisible: true,
             toSearch: this.state.graveyard,
@@ -122,7 +124,7 @@ class Player extends Component {
 
     handleLibrarySearch() {
         if (this.state.library.length === 0) { return; }
-        
+
         this.setState({
             searchVisible: true,
             toSearch: this.state.library,
@@ -143,10 +145,10 @@ class Player extends Component {
     render() {
         return (
             <React.Fragment>
-                <div className="hand">
+                <Hand>
                     {this.state.hand.map((data) =>
-                        <Card cardData={data}></Card>)}
-                </div>
+                        <Card key={data.id} cardData={data}></Card>)}
+                </Hand>
 
                 <Deck
                     handleDraw={this.handleDraw}
@@ -163,7 +165,7 @@ class Player extends Component {
                 <div className={this.state.searchVisible ? "search show" : "search"}>
                     <div className="searchHeader">
                         <input className="searchBar" type="text" onChange={this.onSearch} />
-                        <button className="exit" onClick={() => this.setState({ searchVisible: false, toSearch: [] })}>
+                        <button className="exit" onClick={() => this.setState({ searchVisible: false, toSearch: [], searchResults: [] })}>
                             <i className="fas fa-times"></i>
                         </button>
                     </div>
