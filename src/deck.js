@@ -5,7 +5,7 @@ class Deck extends React.Component {
     render() {
         return (
             <div className="deck">
-                <img src="https://i.imgur.com/or94i38.jpg" alt="" />
+                <img src="https://i.imgur.com/or94i38.jpg" alt=""/>
                 <div className="cardBtnContainer">
                     <button className="cardBtn" onClick={this.props.handleDraw}>
                         <i className="fas fa-hand-paper"></i>

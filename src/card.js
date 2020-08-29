@@ -1,15 +1,13 @@
 import React from 'react';
-// import allCards from './all-cards.json';
 
 class Card extends React.Component {
     constructor(props) {
-        super(props);
-        this.name = props.cardData.name;
-        this.image = props.cardData.image_uris.png;
+        super();
         this.state = {
             isFaceDown: props.isFaceDown ? props.isFaceDown : false,
+            name: props.cardData.name,
+            image: props.cardData.image_uris.png,
             isMagnified: false,
-            cardLocation: 'hand',
             isTapped: false,
         }
 
@@ -98,7 +96,7 @@ class Card extends React.Component {
     render() {
         return (
             <div className={this.getClass()}>
-                <img src={this.image} />
+                <img src={this.state.image} />
                 {this.displayButtons()}
             </div>
         )

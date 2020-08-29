@@ -1,4 +1,6 @@
-:root {}
+:root {
+  --padding: 1em;
+}
 
 html {
   background: darkslateblue;
@@ -10,13 +12,52 @@ html *{
 
 .search {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   position: fixed;
   background: rgba(0,0,0,0.5);
   display: none;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
-.search .show {
-  display: unset;
+.search .searchHeader {
+  position: relative;
+  height: 20%;
+}
+.search .searchResults {
+  position: relative;
+  top: 10vh;
+  max-height: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.search.show {
+  /* visibility: visible !important; */
+  display: initial;
+  opacity: 1;
+  transition: opacity 0.3s ;
+}
+
+.searchBar {
+  font-size: 12pt;
+  position: absolute;
+  top: 0; left: 0;
+  margin: var(--padding);
+  padding: calc(var(--padding) / 2);
+  outline: 0;
+  border: 0;
+}
+.search .exit {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin: var(--padding);
+  font-size: 20pt;
+  background: transparent;
+  box-shadow: 0;
+  border: 0;
+  outline: 0;
+  color: white;
 }
 
 .graveyard {
@@ -34,6 +75,9 @@ html *{
 }
 
 .graveyard .card > .cardBtnContainer {
+  display: none;
+}
+.search .tap {
   display: none;
 }
 

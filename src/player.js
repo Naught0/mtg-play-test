@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
+import '../node_modules/fuzzysearch/index';
+
 import Deck from './deck';
 import Card from './card';
 import Graveyard from './graveyard';
-import Search from './search';
+import fuzzysearch from '../node_modules/fuzzysearch/index';
 
 class Player extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             deckListRaw: props.deckList,
             library: [],
@@ -15,13 +16,18 @@ class Player extends Component {
             graveyard: [],
             exile: [],
             battlefield: [],
-            life: props.life
+            life: props.life,
+            toSearch: [],
+            searchResults: [],
+            searchVisible: false
         }
 
         this.handleDraw = this.handleDraw.bind(this);
         this.handleShuffle = this.handleShuffle.bind(this);
         this.handleDiscard = this.handleDiscard.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
+        this.handleLibrarySearch = this.handleLibrarySearch.bind(this);
+        this.handleGraveyardSearch = this.handleGraveyardSearch.bind(this);
+        this.onSearch = this.onSearch.bind(this);
     }
 
     componentDidMount() {
@@ -106,9 +112,33 @@ class Player extends Component {
         }))
     }
 
-    handleSearch(where) {
-
+    handleGraveyardSearch() {
+        if (this.state.graveyard.length === 0) { return; }
+        this.setState({
+            searchVisible: true,
+            toSearch: this.state.graveyard,
+        });
     }
+
+    handleLibrarySearch() {
+        if (this.state.library.length === 0) { return; }
+        
+        this.setState({
+            searchVisible: true,
+            toSearch: this.state.library,
+        });
+    }
+
+    onSearch(e) {
+        e.persist();
+        console.log(`Searching: ${e.target.value}`)
+        console.log(`Matched: ${this.state.toSearch.filter(thing => fuzzysearch(e.target.value, thing.name))}`)
+        this.setState((state, props) => ({
+            searchResults: state.toSearch.filter(c => fuzzysearch(e.target.value.toLowerCase(), c.name.toLowerCase()))
+        }))
+    }
+
+
 
     render() {
         return (
@@ -117,14 +147,36 @@ class Player extends Component {
                     {this.state.hand.map((data) =>
                         <Card cardData={data}></Card>)}
                 </div>
+
                 <Deck
                     handleDraw={this.handleDraw}
                     handleDiscard={this.handleDiscard}
                     handleShuffle={this.handleShuffle}
-                    handleSearch={this.handleSearch}>
+                    handleSearch={this.handleLibrarySearch}>
                 </Deck>
-                <Graveyard handleSearch={this.handleSearch}>{this.state.graveyard}</Graveyard>
-                <Search></Search>
+
+                <Graveyard handleSearch={this.handleGraveyardSearch}>
+                    {this.state.graveyard.map((data) =>
+                        <Card key={data.id} cardData={data}></Card>)}
+                </Graveyard>
+
+                <div className={this.state.searchVisible ? "search show" : "search"}>
+                    <div className="searchHeader">
+                        <input className="searchBar" type="text" onChange={this.onSearch} />
+                        <button className="exit" onClick={() => this.setState({ searchVisible: false, toSearch: [] })}>
+                            <i className="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div className="searchResults">
+                        {
+                            this.state.searchResults.length > 0
+                                ? this.state.searchResults.map(data =>
+                                    <Card key={data.id} cardData={data}></Card>)
+                                : this.state.toSearch.map(data =>
+                                    <Card key={data.id} cardData={data}></Card>)
+                        }
+                    </div>
+                </div>
             </React.Fragment>
         )
     }
