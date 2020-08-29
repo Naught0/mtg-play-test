@@ -64,7 +64,6 @@ html *{
   position: absolute;
   width: 150px;
   height: 209px;
-  padding: 10px;
   bottom: 0; left: 0;
   background: grey;
 }
@@ -89,7 +88,6 @@ html *{
   position: absolute;
   width: 150px;
   height: 209px;
-  padding: 1em;
   bottom: 0; right: 0;
   background: grey;
 }

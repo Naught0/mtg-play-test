@@ -164,7 +164,7 @@ class Player extends Component {
 
                 <div className={this.state.searchVisible ? "search show" : "search"}>
                     <div className="searchHeader">
-                        <input className="searchBar" type="text" onChange={this.onSearch} />
+                        <input ref={input => input && input.focus()} className="searchBar" type="text" onChange={this.onSearch} />
                         <button className="exit" onClick={() => this.setState({ searchVisible: false, toSearch: [], searchResults: [] })}>
                             <i className="fas fa-times"></i>
                         </button>
