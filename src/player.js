@@ -4,6 +4,7 @@ import '../node_modules/fuzzysearch/index';
 import Deck from './deck';
 import Hand from './hand';
 import Card from './card';
+import Exile from './exile';
 import Graveyard from './graveyard';
 import fuzzysearch from '../node_modules/fuzzysearch/index';
 
@@ -28,6 +29,8 @@ class Player extends Component {
         this.handleDiscard = this.handleDiscard.bind(this);
         this.handleLibrarySearch = this.handleLibrarySearch.bind(this);
         this.handleGraveyardSearch = this.handleGraveyardSearch.bind(this);
+        this.handleExileSearch = this.handleExileSearch.bind(this);
+        this.closeSearch = this.closeSearch.bind(this);
         this.onSearch = this.onSearch.bind(this);
     }
 
@@ -131,6 +134,36 @@ class Player extends Component {
         });
     }
 
+    handleExileSearch() {
+        if (this.state.exile.length === 0) { return; }
+
+        this.setState({
+            searchVisible: true,
+            toSearch: this.state.exile
+        });
+    }
+
+    closeSearch() {
+        this.setState({
+            searchResults: [],
+            toSearch: [],
+            searchVisible: false
+        })
+    }
+
+    cardDragStart = (event, data) => {
+        event.dataTransfer.setData('cardData', data);
+    }
+
+    onDragOver = (e) => {
+        e.preventDefault();
+    }
+
+    onGraveyardDrop = (e) => {
+        let cardData = e.dataTransfer.getData('cardData');
+
+    }
+
     onSearch(e) {
         e.persist();
         console.log(`Searching: ${e.target.value}`)
@@ -147,7 +180,12 @@ class Player extends Component {
             <React.Fragment>
                 <Hand>
                     {this.state.hand.map((data) =>
-                        <Card key={data.id} cardData={data}></Card>)}
+                        <Card
+                            onDragStart={(e) => this.cardDragStart(e, data)}
+                            key={data.id}
+                            cardData={data}>
+                        </Card>
+                    )}
                 </Hand>
 
                 <Deck
@@ -159,13 +197,28 @@ class Player extends Component {
 
                 <Graveyard handleSearch={this.handleGraveyardSearch}>
                     {this.state.graveyard.map((data) =>
-                        <Card key={data.id} cardData={data}></Card>)}
+                        <Card
+                            onDragStart={(e) => this.cardDragStart(e, data)}
+                            key={data.id}
+                            cardData={data}>
+                        </Card>
+                    )}
                 </Graveyard>
+
+                <Exile handleSearch={this.handleExileSearch}>
+                    {this.state.exile.map((data) =>
+                        <Card
+                            onDragStart={(e) => this.cardDragStart(e, data)}
+                            key={data.id}
+                            cardData={data}>
+                        </Card>
+                    )}
+                </Exile>
 
                 <div className={this.state.searchVisible ? "search show" : "search"}>
                     <div className="searchHeader">
                         <input ref={input => input && input.focus()} className="searchBar" type="text" onChange={this.onSearch} />
-                        <button className="exit" onClick={() => this.setState({ searchVisible: false, toSearch: [], searchResults: [] })}>
+                        <button className="exit" onClick={this.closeSearch}>
                             <i className="fas fa-times"></i>
                         </button>
                     </div>
@@ -173,13 +226,13 @@ class Player extends Component {
                         {
                             this.state.searchResults.length > 0
                                 ? this.state.searchResults.map(data =>
-                                    <Card key={data.id} cardData={data}></Card>)
+                                    <Card onDragStart={(e) => this.cardDragStart(e, data)} key={data.id} cardData={data}></Card>)
                                 : this.state.toSearch.map(data =>
-                                    <Card key={data.id} cardData={data}></Card>)
+                                    <Card onDragStart={(e) => this.cardDragStart(e, data)} key={data.id} cardData={data}></Card>)
                         }
                     </div>
                 </div>
-            </React.Fragment>
+            </React.Fragment >
         )
     }
 

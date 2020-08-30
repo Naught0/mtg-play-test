@@ -95,7 +95,7 @@ class Card extends React.Component {
 
     render() {
         return (
-            <div className={this.getClass()}>
+            <div draggable className={this.getClass()}>
                 <img src={this.state.image} />
                 {this.displayButtons()}
             </div>
