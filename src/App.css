@@ -96,7 +96,7 @@ html *{
   width: 150px;
 }
 
-.hand {
+/* .hand {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -108,7 +108,7 @@ html *{
   background: grey;
   bottom: 0; left: 0; right: 0;
   margin: auto;
-}
+} */
 
 .hand .tap {
   display: none;

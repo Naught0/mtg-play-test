@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { DragDropContext } from "react-beautiful-dnd";
 import '../node_modules/fuzzysearch/index';
 
 import Deck from './deck';
@@ -14,7 +15,7 @@ class Player extends Component {
         this.state = {
             deckListRaw: props.deckList,
             library: [],
-            hand: [],
+            hand: { id: `hand-${this.props.playerID}`, cards: [] },
             graveyard: [],
             exile: [],
             battlefield: [],
@@ -23,15 +24,6 @@ class Player extends Component {
             searchResults: [],
             searchVisible: false
         }
-
-        this.handleDraw = this.handleDraw.bind(this);
-        this.handleShuffle = this.handleShuffle.bind(this);
-        this.handleDiscard = this.handleDiscard.bind(this);
-        this.handleLibrarySearch = this.handleLibrarySearch.bind(this);
-        this.handleGraveyardSearch = this.handleGraveyardSearch.bind(this);
-        this.handleExileSearch = this.handleExileSearch.bind(this);
-        this.closeSearch = this.closeSearch.bind(this);
-        this.onSearch = this.onSearch.bind(this);
     }
 
     componentDidMount() {
@@ -72,15 +64,18 @@ class Player extends Component {
             }))
     }
 
-    handleDraw() {
+    handleDraw = () => {
         if (this.state.library.length === 0) { return; }
         this.setState((state, props) => ({
-            hand: state.hand.concat([state.library[0]]),
+            hand: {
+                ...state.hand,
+                cards: state.hand.cards.concat([state.library[0]])
+            },
             library: state.library.slice(1)
         }));
     }
 
-    handleShuffle() {
+    handleShuffle = () => {
         if (!window.confirm('Are you sure you want to shuffle your library?')) { return; }
 
         // https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
@@ -108,7 +103,7 @@ class Player extends Component {
         }));
     }
 
-    handleDiscard() {
+    handleDiscard = () => {
         let numToDiscard = parseInt(window.prompt('Discard how many cards?'));
         this.setState((state, props) => ({
             library: state.library.slice(numToDiscard),
@@ -116,7 +111,7 @@ class Player extends Component {
         }))
     }
 
-    handleGraveyardSearch() {
+    handleGraveyardSearch = () => {
         if (this.state.graveyard.length === 0) { return; }
 
         this.setState({
@@ -125,7 +120,7 @@ class Player extends Component {
         });
     }
 
-    handleLibrarySearch() {
+    handleLibrarySearch = () => {
         if (this.state.library.length === 0) { return; }
 
         this.setState({
@@ -134,7 +129,7 @@ class Player extends Component {
         });
     }
 
-    handleExileSearch() {
+    handleExileSearch = () => {
         if (this.state.exile.length === 0) { return; }
 
         this.setState({
@@ -143,7 +138,7 @@ class Player extends Component {
         });
     }
 
-    closeSearch() {
+    closeSearch = () => {
         this.setState({
             searchResults: [],
             toSearch: [],
@@ -151,20 +146,7 @@ class Player extends Component {
         })
     }
 
-    cardDragStart = (event, data) => {
-        event.dataTransfer.setData('cardData', data);
-    }
-
-    onDragOver = (e) => {
-        e.preventDefault();
-    }
-
-    onGraveyardDrop = (e) => {
-        let cardData = e.dataTransfer.getData('cardData');
-
-    }
-
-    onSearch(e) {
+    onSearch = e => {
         e.persist();
         console.log(`Searching: ${e.target.value}`)
         console.log(`Matched: ${this.state.toSearch.filter(thing => fuzzysearch(e.target.value, thing.name))}`)
@@ -173,18 +155,43 @@ class Player extends Component {
         }))
     }
 
+    // React Beautiful DND stuff
+    onDragEnd = result => {
+        const { destination, source, draggableId } = result;
+        if (!destination) { return; }
 
+        if (
+            destination.droppableId === source.droppableId &&
+            destination.index === source.index
+        ) {
+            return;
+        }
+
+        const newCards = Array.from(this.state.hand.cards);
+        newCards.splice(source.index, 1);
+        newCards.splice(destination.index, 0, 
+            this.state.hand.cards.filter((elem) => elem.id == draggableId)[0]);
+        console.log(this.state.hand.cards);
+        console.log(newCards);
+
+        this.setState((state, props) => ({
+            hand: {
+                ...state.hand,
+                cards: newCards
+            }
+        }));
+    }
 
     render() {
         return (
-            <React.Fragment>
-                <Hand>
-                    {this.state.hand.map((data) =>
+            <DragDropContext onDragEnd={this.onDragEnd}>
+                <Hand handID={this.state.hand.id}>
+                    {this.state.hand.cards.map((data, index) =>
                         <Card
-                            onDragStart={(e) => this.cardDragStart(e, data)}
                             key={data.id}
-                            cardData={data}>
-                        </Card>
+                            cardData={data}
+                            index={index}
+                        />
                     )}
                 </Hand>
 
@@ -196,22 +203,22 @@ class Player extends Component {
                 </Deck>
 
                 <Graveyard handleSearch={this.handleGraveyardSearch}>
-                    {this.state.graveyard.map((data) =>
+                    {this.state.graveyard.map((data, index) =>
                         <Card
-                            onDragStart={(e) => this.cardDragStart(e, data)}
                             key={data.id}
-                            cardData={data}>
-                        </Card>
+                            cardData={data}
+                            index={index}
+                        />
                     )}
                 </Graveyard>
 
                 <Exile handleSearch={this.handleExileSearch}>
-                    {this.state.exile.map((data) =>
+                    {this.state.exile.map((data, index) =>
                         <Card
-                            onDragStart={(e) => this.cardDragStart(e, data)}
                             key={data.id}
-                            cardData={data}>
-                        </Card>
+                            cardData={data}
+                            index={index}
+                        />
                     )}
                 </Exile>
 
@@ -225,14 +232,22 @@ class Player extends Component {
                     <div className="searchResults">
                         {
                             this.state.searchResults.length > 0
-                                ? this.state.searchResults.map(data =>
-                                    <Card onDragStart={(e) => this.cardDragStart(e, data)} key={data.id} cardData={data}></Card>)
-                                : this.state.toSearch.map(data =>
-                                    <Card onDragStart={(e) => this.cardDragStart(e, data)} key={data.id} cardData={data}></Card>)
+                                ? this.state.searchResults.map((data, index) =>
+                                    <Card
+                                        key={data.id}
+                                        cardData={data}
+                                        index={index}
+                                    />)
+                                : this.state.toSearch.map((data, index) =>
+                                    <Card
+                                        key={data.id}
+                                        cardData={data}
+                                        index={index}
+                                    />)
                         }
                     </div>
                 </div>
-            </React.Fragment >
+            </DragDropContext >
         )
     }
 

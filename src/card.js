@@ -1,28 +1,20 @@
 import React from 'react';
+import { Draggable } from "react-beautiful-dnd";
+import styled from 'styled-components';
+
+const Container = styled.div``;
+
 
 class Card extends React.Component {
-    constructor(props) {
-        super();
-        this.state = {
-            isFaceDown: props.isFaceDown ? props.isFaceDown : false,
-            name: props.cardData.name,
-            image: props.cardData.image_uris.png,
-            isMagnified: false,
-            isTapped: false,
-        }
-
-        this.toggleMagnify = this.toggleMagnify.bind(this);
-        this.toggleTap = this.toggleTap.bind(this);
-        this.onDrag = this.onDrag.bind(this);
+    state = {
+        isFaceDown: this.props.isFaceDown ? this.props.isFaceDown : false,
+        name: this.props.cardData.name,
+        image: this.props.cardData.image_uris.png,
+        isMagnified: false,
+        isTapped: false
     }
 
-    onMouseUp() {
-        // Tap the card i.e. rotate 90deg
-        // notify() tapped X card
-    }
-
-    toggleMagnify(e) {
-        // Set position to be absolute
+    toggleMagnify = () => {
         if (this.state.isFaceDown) return;
 
         if (this.state.isMagnified) {
@@ -37,7 +29,7 @@ class Card extends React.Component {
         }
     }
 
-    toggleTap(e) {
+    toggleTap = () => {
         if (this.state.isTapped) {
             this.setState({
                 isTapped: false
@@ -51,7 +43,7 @@ class Card extends React.Component {
         }
     }
 
-    displayButtons() {
+    displayButtons = () => {
         let buttonArray = [];
         if (this.state.isFaceDown) {
             return;
@@ -76,7 +68,7 @@ class Card extends React.Component {
         )
     }
 
-    getClass() {
+    getClass = () => {
         let classList = ['card'];
         if (this.state.isMagnified) {
             classList.push('expanded');
@@ -87,18 +79,22 @@ class Card extends React.Component {
         return classList.join(' ');
     }
 
-    onDrag() {
-        // Set position absolute
-        // Magnify card UNLESS dropzone
-        // Transition ~0.3s width/height
-    }
-
     render() {
+        const { provided, innerRef } = this.props;
         return (
-            <div draggable className={this.getClass()}>
-                <img src={this.state.image} />
-                {this.displayButtons()}
-            </div>
+            <Draggable draggableId={this.props.cardData.id} index={this.props.index}>
+                {(provided) => (
+                    <Container
+                        className={this.getClass()}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        ref={provided.innerRef}
+                    >
+                        <img src={this.state.image} />
+                        {this.displayButtons()}
+                    </Container>
+                )}
+            </Draggable>
         )
     }
 }
