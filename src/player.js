@@ -168,11 +168,13 @@ class Player extends Component {
         }
 
         const newCards = Array.from(this.state.hand.cards);
+        // Remove dragged element
         newCards.splice(source.index, 1);
-        newCards.splice(destination.index, 0, 
+        // Insert the card at new index
+        newCards.splice(
+            destination.index,
+            0,
             this.state.hand.cards.filter((elem) => elem.id == draggableId)[0]);
-        console.log(this.state.hand.cards);
-        console.log(newCards);
 
         this.setState((state, props) => ({
             hand: {
@@ -182,9 +184,17 @@ class Player extends Component {
         }));
     }
 
+    onDragStart = () => {
+        // TODO: increase size of dragged component
+        // potentially just add a class / switch in a styled component props
+    }
+
     render() {
         return (
-            <DragDropContext onDragEnd={this.onDragEnd}>
+            <DragDropContext
+                onDragStart={this.onDragStart}
+                onDragEnd={this.onDragEnd}
+            >
                 <Hand handID={this.state.hand.id}>
                     {this.state.hand.cards.map((data, index) =>
                         <Card
