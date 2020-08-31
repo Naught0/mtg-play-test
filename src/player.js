@@ -6,6 +6,7 @@ import Deck from './deck';
 import Hand from './hand';
 import Card from './card';
 import Exile from './exile';
+import Search from './search';
 import Graveyard from './graveyard';
 import fuzzysearch from '../node_modules/fuzzysearch/index';
 
@@ -20,9 +21,15 @@ class Player extends Component {
             exile: [],
             battlefield: [],
             life: props.life,
-            toSearch: [],
-            searchResults: [],
-            searchVisible: false
+            search: {
+                id: `search-${this.props.playerID}`,
+                toSearch: [],
+                searchResults: [],
+                visible: false
+            },
+            // toSearch: [],
+            // searchResults: [],
+            // searchVisible: false
         }
     }
 
@@ -114,49 +121,63 @@ class Player extends Component {
     handleGraveyardSearch = () => {
         if (this.state.graveyard.length === 0) { return; }
 
-        this.setState({
-            searchVisible: true,
-            toSearch: this.state.graveyard,
-        });
+        this.setState((state, props) => ({
+            search: {
+                ...this.state.search,
+                visible: true,
+                toSearch: state.graveyard
+            }
+        }));
     }
 
     handleLibrarySearch = () => {
         if (this.state.library.length === 0) { return; }
 
-        this.setState({
-            searchVisible: true,
-            toSearch: this.state.library,
-        });
+        this.setState((state, props) => ({
+            search: {
+                ...state.search,
+                visible: true,
+                toSearch: state.library
+            }
+        }));
     }
 
     handleExileSearch = () => {
         if (this.state.exile.length === 0) { return; }
 
-        this.setState({
-            searchVisible: true,
-            toSearch: this.state.exile
-        });
+        this.setState((state, props) => ({
+            search: {
+                ...state.search,
+                visisble: true,
+                toSearch: state.exile
+            }
+        }));
     }
 
     closeSearch = () => {
-        this.setState({
-            searchResults: [],
-            toSearch: [],
-            searchVisible: false
-        })
+        this.setState((state, props) => ({
+            search: {
+                ...state.search,
+                searchResults: [],
+                toSearch: [],
+                visible: false
+            }
+        }));
     }
 
     onSearch = e => {
         e.persist();
-        console.log(`Searching: ${e.target.value}`)
-        console.log(`Matched: ${this.state.toSearch.filter(thing => fuzzysearch(e.target.value, thing.name))}`)
         this.setState((state, props) => ({
-            searchResults: state.toSearch.filter(c => fuzzysearch(e.target.value.toLowerCase(), c.name.toLowerCase()))
-        }))
+            search: {
+                ...state.search,
+                searchResults: state.search.toSearch.filter(c => fuzzysearch(e.target.value.toLowerCase(), c.name.toLowerCase()))
+            }
+        }));
     }
 
     // React Beautiful DND stuff
     onDragEnd = result => {
+        console.log(result);
         const { destination, source, draggableId } = result;
         if (!destination) { return; }
 
@@ -167,25 +188,29 @@ class Player extends Component {
             return;
         }
 
-        const newCards = Array.from(this.state.hand.cards);
-        // Remove dragged element
-        newCards.splice(source.index, 1);
-        // Insert the card at new index
-        newCards.splice(
-            destination.index,
-            0,
-            this.state.hand.cards.filter((elem) => elem.id == draggableId)[0]);
+        // TODO: Implement between list logic
+        // TODO: Restructure data / state to allow for 
+        //       dropping between lists based on destination.droppableId & source.droppableId
+        // const newCards = Array.from(this.state.hand.cards);
+        // // Remove dragged element
+        // newCards.splice(source.index, 1);
+        // // Insert the card at new index
+        // newCards.splice(
+        //     destination.index,
+        //     0,
+        //     this.state.hand.cards.filter((elem) => elem.id == draggableId)[0]);
 
-        this.setState((state, props) => ({
-            hand: {
-                ...state.hand,
-                cards: newCards
-            }
-        }));
+        // this.setState((state, props) => ({
+        //     hand: {
+        //         ...state.hand,
+        //         cards: newCards
+        //     }
+        // }));
     }
 
     onDragStart = () => {
         // TODO: increase size of dragged component
+        // this.closeSearch();
         // potentially just add a class / switch in a styled component props
     }
 
@@ -232,31 +257,30 @@ class Player extends Component {
                     )}
                 </Exile>
 
-                <div className={this.state.searchVisible ? "search show" : "search"}>
-                    <div className="searchHeader">
-                        <input ref={input => input && input.focus()} className="searchBar" type="text" onChange={this.onSearch} />
-                        <button className="exit" onClick={this.closeSearch}>
-                            <i className="fas fa-times"></i>
-                        </button>
-                    </div>
-                    <div className="searchResults">
+                {this.state.search.visible &&
+                    <Search
+                        searchID={this.state.search.id}
+                        show={this.state.search.visible}
+                        onSearch={this.onSearch}
+                        closeSearch={this.closeSearch}
+                    >
                         {
-                            this.state.searchResults.length > 0
-                                ? this.state.searchResults.map((data, index) =>
+                            this.state.search.searchResults.length > 0
+                                ? this.state.search.searchResults.map((data, index) =>
                                     <Card
                                         key={data.id}
                                         cardData={data}
                                         index={index}
                                     />)
-                                : this.state.toSearch.map((data, index) =>
+                                : this.state.search.toSearch.map((data, index) =>
                                     <Card
                                         key={data.id}
                                         cardData={data}
                                         index={index}
                                     />)
                         }
-                    </div>
-                </div>
+                    </Search>
+                }
             </DragDropContext >
         )
     }

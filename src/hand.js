@@ -15,18 +15,21 @@ const Container = styled.div`
     background: grey;
     bottom: 0; left: 0; right: 0;
     margin: auto;
+
+    & .card .tap {
+        display: none;
+    }
 `;
 
 class Hand extends React.Component {
 
     render() {
         return (
-            <Droppable droppableId={this.props.handID}>
+            <Droppable direction="horizontal" droppableId={this.props.handID}>
                 {(provided) => (
                     <Container
                         ref={provided.innerRef}
                         {...provided.droppableProps}
-                        className="hand"
                     >
                         {this.props.children}
                         {provided.placeholder}

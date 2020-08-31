@@ -80,7 +80,6 @@ class Card extends React.Component {
     }
 
     render() {
-        const { provided, innerRef } = this.props;
         return (
             <Draggable draggableId={this.props.cardData.id} index={this.props.index}>
                 {(provided) => (
