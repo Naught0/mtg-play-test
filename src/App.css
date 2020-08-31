@@ -10,26 +10,6 @@ html *{
   border-radius: 0.3em;
 }
 
-.graveyard {
-  position: absolute;
-  width: 150px;
-  height: 209px;
-  bottom: 0; left: 0;
-  background: grey;
-}
-.graveyard .card {
-  position: absolute;
-  width: 150px;
-  height: 209px;
-}
-
-.graveyard .card > .cardBtnContainer {
-  display: none;
-}
-.search .tap {
-  display: none;
-}
-
 .exile {
 
 }

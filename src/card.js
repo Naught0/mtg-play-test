@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const Container = styled.div``;
 
-// TODO: Implement +1/+1 counters
+// TODO: Implement +1/+1 counters -> 2 (+1/+1)
 class Card extends React.Component {
     state = {
         isFaceDown: this.props.isFaceDown ? this.props.isFaceDown : false,
