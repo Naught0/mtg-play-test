@@ -31,7 +31,13 @@ class Hand extends React.Component {
                         ref={provided.innerRef}
                         {...provided.droppableProps}
                     >
-                        {this.props.children}
+                        {this.props.cards.map((data, index) =>
+                            <Card
+                                key={data.id}
+                                cardData={data}
+                                index={index}
+                            />
+                        )}
                         {provided.placeholder}
                     </Container>
                 )}
