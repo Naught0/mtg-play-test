@@ -8,6 +8,9 @@ const Container = styled.div`
     position: fixed;
     background: rgba(0,0,0,0.5);
     transition: ease all 0.3s;
+    & .tap {
+      display: none;
+    }
 `;
 
 const SearchHeader = styled.div`
