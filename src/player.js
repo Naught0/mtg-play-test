@@ -17,11 +17,19 @@ class Player extends Component {
         this.state = {
             deckListRaw: props.deckList,
             life: props.life,
-            library: { id: `library${pid}`, cards: [] },
+            // store all cards by IDs with data in byId
+            // Each zone would filter by IDs then map
+            allCards: {
+                byId: {
+                    "id": "dataHere"
+                },
+                allIds: []
+            },
+            library: { id: `library${pid}`, cardIds: [] },
             hand: { id: `hand${pid}`, cards: [] },
-            graveyard: { id: `graveyard${pid}`, cards: [] },
-            exile: { id: `exile${pid}`, cards: [] },
-            battlefield: { id: `battlefield${pid}`, cards: [] },
+            graveyard: { id: `graveyard${pid}`, cardIds: [] },
+            exile: { id: `exile${pid}`, cardIds: [] },
+            battlefield: { id: `battlefield${pid}`, cardIds: [] },
             search: {
                 id: `search${pid}`,
                 toSearch: [],
