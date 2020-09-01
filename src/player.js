@@ -13,16 +13,17 @@ import fuzzysearch from '../node_modules/fuzzysearch/index';
 class Player extends Component {
     constructor(props) {
         super(props);
+        const pid = this.props.playerID;
         this.state = {
             deckListRaw: props.deckList,
-            library: [],
-            hand: { id: `hand-${this.props.playerID}`, cards: [] },
-            graveyard: [],
-            exile: [],
-            battlefield: [],
             life: props.life,
+            library: { id: `library${pid}`, cards: [] },
+            hand: { id: `hand${pid}`, cards: [] },
+            graveyard: { id: `graveyard${pid}`, cards: [] },
+            exile: { id: `exile${pid}`, cards: [] },
+            battlefield: { id: `battlefield${pid}`, cards: [] },
             search: {
-                id: `search-${this.props.playerID}`,
+                id: `search${pid}`,
                 toSearch: [],
                 searchResults: [],
                 visible: false
@@ -65,10 +66,12 @@ class Player extends Component {
             body: this.deckListRawToJson()
         })
             .then(resp => resp.json())
-            // .then(data => console.log(data.data))
             .then(data => this.setState({
-                library: this.jsonToCardArr(data)
-            }))
+                library: {
+                    ...this.state.library,
+                    cards: data.data
+                }
+            }));
     }
 
     handleDraw = () => {
@@ -76,9 +79,12 @@ class Player extends Component {
         this.setState((state, props) => ({
             hand: {
                 ...state.hand,
-                cards: state.hand.cards.concat([state.library[0]])
+                cards: state.hand.cards.concat([state.library.cards[0]])
             },
-            library: state.library.slice(1)
+            library: {
+                ...state.library,
+                cards: state.library.cards.slice(1)
+            }
         }));
     }
 
@@ -105,17 +111,26 @@ class Player extends Component {
             return array;
         }
 
-        this.setState((state, props) => ({
-            library: shuffle(state.library)
+        this.setState((prev, props) => ({
+            library: {
+                ...prev.library,
+                cards: shuffle(prev.library.cards)
+            }
         }));
     }
 
     handleDiscard = () => {
         let numToDiscard = parseInt(window.prompt('Discard how many cards?'));
         this.setState((state, props) => ({
-            library: state.library.slice(numToDiscard),
-            graveyard: state.graveyard.concat(state.library.slice(0, numToDiscard))
-        }))
+            library: {
+                ...state.library,
+                cards: state.library.cards.slice(numToDiscard)
+            },
+            graveyard: {
+                ...state.graveyard,
+                cards: state.graveyard.cards.concat(state.library.cards.slice(0, numToDiscard))
+            }
+        }));
     }
 
     handleGraveyardSearch = () => {
@@ -123,21 +138,21 @@ class Player extends Component {
 
         this.setState((state, props) => ({
             search: {
-                ...this.state.search,
+                ...state.search,
                 visible: true,
-                toSearch: state.graveyard
+                toSearch: state.graveyard.cards
             }
         }));
     }
 
     handleLibrarySearch = () => {
-        if (this.state.library.length === 0) { return; }
+        if (this.state.library.cards.length === 0) { return; }
 
         this.setState((state, props) => ({
             search: {
                 ...state.search,
                 visible: true,
-                toSearch: state.library
+                toSearch: state.library.cards
             }
         }));
     }
@@ -149,7 +164,7 @@ class Player extends Component {
             search: {
                 ...state.search,
                 visisble: true,
-                toSearch: state.exile
+                toSearch: state.exile.cards
             }
         }));
     }
@@ -230,21 +245,16 @@ class Player extends Component {
                     handleDraw={this.handleDraw}
                     handleDiscard={this.handleDiscard}
                     handleShuffle={this.handleShuffle}
-                    handleSearch={this.handleLibrarySearch}>
-                </Deck>
+                    handleSearch={this.handleLibrarySearch}
+                />
 
-                <Graveyard handleSearch={this.handleGraveyardSearch}>
-                    {this.state.graveyard.map((data, index) =>
-                        <Card
-                            key={data.id}
-                            cardData={data}
-                            index={index}
-                        />
-                    )}
-                </Graveyard>
+                <Graveyard
+                    cards={this.state.graveyard.cards}
+                    handleSearch={this.handleGraveyardSearch}
+                />
 
                 <Exile handleSearch={this.handleExileSearch}>
-                    {this.state.exile.map((data, index) =>
+                    {this.state.exile.cards.map((data, index) =>
                         <Card
                             key={data.id}
                             cardData={data}
