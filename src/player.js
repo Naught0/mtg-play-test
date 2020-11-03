@@ -257,12 +257,12 @@ class Player extends Component {
                 />
 
                 <Graveyard
-                    cards={this.state.graveyard.cards}
+                    cards={this.state.graveyard.cardIds}
                     handleSearch={this.handleGraveyardSearch}
                 />
 
                 <Exile handleSearch={this.handleExileSearch}>
-                    {this.state.exile.cards.map((data, index) =>
+                    {this.state.exile.cardIds.map((data, index) =>
                         <Card
                             key={data.id}
                             cardData={data}
