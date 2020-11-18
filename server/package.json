@@ -1,0 +1,19 @@
+{
+  "name": "server",
+  "version": "0.1.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "cookie-parser": "^1.4.5",
+    "morgan": "^1.10.0",
+    "socket.io": "^3.0.2"
+  },
+  "scripts": {
+    "startd": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
