@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import { DragDropContext } from "react-beautiful-dnd";
-import '../node_modules/fuzzysearch/index';
-
 import Deck from './deck';
 import Hand from './hand';
 import Card from './card';
 import Exile from './exile';
 import Search from './search';
 import Graveyard from './graveyard';
-import fuzzysearch from '../node_modules/fuzzysearch/index';
+import fuzzysearch from '../../node_modules/fuzzysearch/index';
 
 class Player extends Component {
     constructor(props) {
